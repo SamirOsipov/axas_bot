@@ -12,12 +12,24 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(commands=['start', 'help'])
 def command_handler(message: Message):
     #клавиатура для бота
-    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button_tell = types.KeyboardButton(text='Рассказать о нас')
-    keyboard.add(button_tell)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.row('Мобильные приложения', 'Веб-платформы')
+    keyboard.row('Нейросети', 'Связаться с нами')
     bot.send_message(message.chat.id, '''<b>Добро пожаловать!</b> 
-    
-Привет! Это компания AXAS''', reply_markup=keyboard, parse_mode='HTML')
+    Это телеграм бот компании AXAS. Что Вас интересует?''', reply_markup=keyboard, parse_mode='HTML')
+
+@bot.message_handler(commands=['contacts'])
+def default_test(message):
+    keyboard = types.InlineKeyboardMarkup()
+    site_button = types.InlineKeyboardButton(text="Вебсайт", url="http://axas-soft.ru/")
+    vk_button = types.InlineKeyboardButton(text="Вконтакте", url="https://vk.com/axas_soft")
+    inst_button = types.InlineKeyboardButton(text="Инстаграм", url="http://axas-soft.ru/")
+    fb_button = types.InlineKeyboardButton(text="Фейсбук", url="https://www.facebook.com/iAXAS/")
+    keyboard.add(site_button)
+    keyboard.add(vk_button)
+    keyboard.add(fb_button)
+    keyboard.add(inst_button)
+    bot.send_message(message.chat.id, "Hаши контакты.", reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['sticker'])
@@ -29,22 +41,14 @@ def sticker_handler(message: Message):
 @bot.message_handler(commands=['app'])
 def choose_buttom(message: Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.row(' Android-приложение', ' iOS-приложение')
+    keyboard.row('Android-приложение', ' iOS-приложение')
     keyboard.row('Обе платформы')
 
 
-    bot.send_message(message.chat.id, '''<b>Выберите платформу</b>  ''', reply_markup=keyboard,parse_mode='HTML')
+    bot.send_message(message.chat.id, '''<b>Выберите платформу</b>  ''', reply_markup=keyboard, parse_mode='HTML')
 
    
 
-
-@bot.message_handler(commands=["phone"])
-def geophone(message):
-    # Эти параметры для клавиатуры необязательны, просто для удобства
-    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
-    keyboard.row(button_phone)
-    bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
 
 
 bot.polling(timeout=60)
