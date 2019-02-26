@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import random
+
 import telebot
+
 from telebot import types
 from telebot.types import Message
 
@@ -21,20 +22,22 @@ def sticker_handler(message: Message):
     bot.send_sticker(message.chat.id, STICKER_ID)
 
 
-@bot.edited_message_handler(content_types=['text'])
-@bot.message_handler(content_types=['text'])
-def echo_digits(message: Message):
-    if 'Samir' in message.text:
-        bot.reply_to(message, 'Hi, Samirka')
-        return
-
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['app'])
 def choose_buttom(message: Message):
-    keyboard = types.InlineKeyboardMarkup
-    but = types.InlineKeyboardButton(text='Android-приложение')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    callback_button = types.KeyboardButton(text='Android-приложение')
+    keyboard.row(u'\uD83C\uDD95' + ' Android-приложение', u'\uD83D\uDC6B' + ' iOS-приложение')
+    keyboard.row('Назад')
 
+    bot.send_message(message.chat.id, '''<b>Приложение</b>  ''',reply_markup=keyboard,parse_mode='HTML')
 
-    bot.reply_to(message, str(random.random()))
+@bot.message_handler(commands=["phone"])
+def geophone(message):
+    # Эти параметры для клавиатуры необязательны, просто для удобства
+    keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
+    keyboard.row(button_phone)
+    bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
 
 
 bot.polling(timeout=60)
