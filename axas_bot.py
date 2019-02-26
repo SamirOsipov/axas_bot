@@ -23,18 +23,24 @@ def command_handler(message: Message):
 Это телеграм бот компании AXAS. Что Вас интересует?''', reply_markup=keyboard, parse_mode='HTML')
 
 
-@bot.message_handler(commands=['contacts'])
-def default_test(message):
+@bot.message_handler(content_types=['text'])
+def contacts_handler(message: Message):
     keyboard = types.InlineKeyboardMarkup()
-    site_button = types.InlineKeyboardButton(text="Вебсайт", url="http://axas-soft.ru/")
-    vk_button = types.InlineKeyboardButton(text="Вконтакте", url="https://vk.com/axas_soft")
-    inst_button = types.InlineKeyboardButton(text="Инстаграм", url="http://axas-soft.ru/")
-    fb_button = types.InlineKeyboardButton(text="Фейсбук", url="https://www.facebook.com/iAXAS/")
-    keyboard.add(site_button)
-    keyboard.add(vk_button)
-    keyboard.add(fb_button)
-    keyboard.add(inst_button)
-    bot.send_message(message.chat.id, "Hаши контакты.", reply_markup=keyboard)
+    if ('Связаться с нами' in message.text):
+        site_button = types.InlineKeyboardButton(text="Вебсайт", url="http://axas-soft.ru/")
+        vk_button = types.InlineKeyboardButton(text="Вконтакте", url="https://vk.com/axas_soft")
+        inst_button = types.InlineKeyboardButton(text="Инстаграм", url="http://axas-soft.ru/")
+        fb_button = types.InlineKeyboardButton(text="Фейсбук", url="https://www.facebook.com/iAXAS/")
+        keyboard.add(site_button)
+        keyboard.add(vk_button)
+        keyboard.add(fb_button)
+        keyboard.add(inst_button)
+        bot.send_message(message.chat.id, "Hаши контакты.", reply_markup=keyboard)
+    elif ('Мобильные приложения' in message.text):
+        button_1 = types.InlineKeyboardButton(text='Приложение для бизнеса', url="http://axas-soft.ru")
+        button_2 = types.InlineKeyboardButton(text='Игры', url="http://axas-soft.ru")
+        keyboard.add(button_1, button_2)
+        bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['sticker'])
@@ -42,15 +48,6 @@ def sticker_handler(message: Message):
     bot.send_message(message.chat.id, 'А вот тебе стикер!')
     bot.send_sticker(message.chat.id, STICKER_ID)
 
-
-@bot.message_handler(content_types=['text'])
-def app(message: Message):
-    if ('Мобильные приложения' in message.text):
-        keyboard = types.InlineKeyboardMarkup()
-        button_1 = types.InlineKeyboardButton(text='Приложение для бизнеса', url="http://axas-soft.ru")
-        button_2 = types.InlineKeyboardButton(text='Игры', url="http://axas-soft.ru")
-        keyboard.add(button_1, button_2)
-        bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
 
 
 @bot.message_handler(commands=['app'])
