@@ -18,7 +18,7 @@ def command_handler(message: Message):
 
 @bot.message_handler(content_types=['sticker'])
 def sticker_handler(message: Message):
-    bot.send_message(message.chat.id, 'А вот тебе стикер, чтобы ты не скучал!')
+    bot.send_message(message.chat.id, 'А вот тебе стикер!')
     bot.send_sticker(message.chat.id, STICKER_ID)
 
 
