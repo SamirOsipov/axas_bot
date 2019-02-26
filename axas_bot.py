@@ -29,11 +29,14 @@ def sticker_handler(message: Message):
 @bot.message_handler(commands=['app'])
 def choose_buttom(message: Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    callback_button = types.KeyboardButton(text='Android-приложение')
-    keyboard.row(u'\uD83C\uDD95' + ' Android-приложение', u'\uD83D\uDC6B' + ' iOS-приложение')
-    keyboard.row('Назад')
+    keyboard.row(' Android-приложение', ' iOS-приложение')
+    keyboard.row('Обе платформы')
 
-    bot.send_message(message.chat.id, '''<b>Приложение</b>  ''', reply_markup=keyboard,parse_mode='HTML')
+
+    bot.send_message(message.chat.id, '''<b>Выберите платформу</b>  ''', reply_markup=keyboard,parse_mode='HTML')
+
+   
+
 
 @bot.message_handler(commands=["phone"])
 def geophone(message):
