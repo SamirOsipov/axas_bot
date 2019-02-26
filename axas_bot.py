@@ -41,6 +41,17 @@ def contacts_handler(message: Message):
         button_2 = types.InlineKeyboardButton(text='Игры', url="http://axas-soft.ru")
         keyboard.add(button_1, button_2)
         bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
+    elif ('Нейросети' in message.text):
+        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
+        keyboard.row(button_phone)
+        bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+    elif ('Веб-платформы' in message.text):
+        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+        button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
+        keyboard.row(button_phone)
+        bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+
 
 
 @bot.message_handler(content_types=['sticker'])
