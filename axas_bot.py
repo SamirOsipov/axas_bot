@@ -5,13 +5,18 @@ from telebot.types import Message
 import requests
 
 
-
 TOKEN = '737334966:AAEetwAqs6cq_9ZNbeEBHpyYsDUJ1KXyA_4'
+
 STICKER_ID = 'CAADBQADzwMAAukKyAPJ6kGu2BGu0gI'
 
 bot = telebot.TeleBot(TOKEN)
 
 api = 'http://axas.ru/bot/'
+
+userData = dict(
+
+)
+
 
 @bot.message_handler(commands=['start', 'help'])
 def command_handler(message: Message):
@@ -26,14 +31,14 @@ def command_handler(message: Message):
 Это телеграм бот компании AXAS. Что Вас интересует?''', reply_markup=keyboard, parse_mode='HTML')
 
 
-
 @bot.message_handler(content_types=['text'])
 def contacts_handler(message: Message):
     keyboard = types.InlineKeyboardMarkup()
     if 'Мобильные приложения' in message.text:
         button_1 = types.InlineKeyboardButton(text='Приложение для бизнеса', callback_data='business_app')
         button_2 = types.InlineKeyboardButton(text='Игры', callback_data='games')
-        keyboard.add(button_1, button_2)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
         bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
     elif 'Нейросети' in message.text:
         keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
@@ -46,8 +51,10 @@ def contacts_handler(message: Message):
         button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
         button_3 = types.InlineKeyboardButton(text='Визитка', callback_data='price')
         button_4 = types.InlineKeyboardButton(text='Каталог', callback_data='price')
-        keyboard.add(button_1, button_2)
-        keyboard.add(button_3, button_4)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
+        keyboard.add(button_3)
+        keyboard.add(button_4)
 
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
     elif 'Контакты' in message.text:
@@ -96,7 +103,8 @@ def callback_inline(call):
         keyboard = types.InlineKeyboardMarkup()
         button_1 = types.InlineKeyboardButton(text='Лендинг', callback_data='price')
         button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
-        keyboard.add(button_1, button_2)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
         bot.send_message(call.message.chat.id, "Цена", reply_markup=keyboard)
     elif call.data == 'business_app':
         ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
@@ -114,6 +122,7 @@ def callback_inline(call):
         bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
     elif call.data == 'call_axas':
         url = api + 'bot.php'
+
         params = dict(
             param='phone'
         )
