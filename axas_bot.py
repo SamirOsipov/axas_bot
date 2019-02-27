@@ -2,12 +2,14 @@
 import telebot
 from telebot import types
 from telebot.types import Message
+import requests
 
 TOKEN = '737334966:AAEetwAqs6cq_9ZNbeEBHpyYsDUJ1KXyA_4'
 STICKER_ID = 'CAADBQADzwMAAukKyAPJ6kGu2BGu0gI'
 
 bot = telebot.TeleBot(TOKEN)
 
+api = 'http://axas.ru/bot/'
 
 @bot.message_handler(commands=['start', 'help'])
 def command_handler(message: Message):
@@ -55,6 +57,22 @@ def contacts_handler(message: Message):
         button_4 = types.InlineKeyboardButton(text='Каталог', callback_data='price')
         keyboard.add(button_1, button_2)
         keyboard.add(button_3, button_4)
+        bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+    elif 'Отправьте номер телефона, для связи с вами' in message.text:
+
+        url = api + 'bot.php'
+
+        params = dict(
+            param='phone'
+        )
+        # получаем ответ от сервера
+        # resp = requests.get(url=url, params=params)
+        resp = requests.post(url=url, params=params)
+        # парсим json
+        data = resp.json()
+        print(resp)
+        bot.send_message(message.chat.id, data['phone'])
+
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
 
 
