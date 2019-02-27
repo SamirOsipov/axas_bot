@@ -16,7 +16,7 @@ def command_handler(message: Message):
     # клавиатура для бота
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.row('Мобильные приложения', 'Веб-платформы')
-    keyboard.row('Нейросети', 'Связаться с нами')
+    keyboard.row('Нейросети', 'Контакты')
     button_phone = types.KeyboardButton(text="Отправьте номер телефона, для связи с вами", request_contact=True)
     keyboard.row(button_phone)
     bot.send_message(message.chat.id, '''<b>Добро пожаловать!</b> 
@@ -58,7 +58,7 @@ def contacts_handler(message: Message):
         keyboard.add(button_1, button_2)
         keyboard.add(button_3, button_4)
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
-    elif 'Отправьте номер телефона, для связи с вами' in message.text:
+    elif 'Контакты' in message.text:
 
         url = api + 'bot.php'
 
@@ -67,13 +67,13 @@ def contacts_handler(message: Message):
         )
         # получаем ответ от сервера
         # resp = requests.get(url=url, params=params)
-        resp = requests.post(url=url, params=params)
+        resp = requests.post(url=url, data=params)
         # парсим json
         data = resp.json()
-        print(resp)
+        print(data)
         bot.send_message(message.chat.id, data['phone'])
 
-        bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+       #bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['sticker'])
