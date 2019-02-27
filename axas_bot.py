@@ -48,6 +48,13 @@ def contacts_handler(message: Message):
         keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
         keyboard.row(button_phone)
+    elif 'Веб-платформы' in message.text:
+        button_1 = types.InlineKeyboardButton(text='Лендинг', callback_data='price')
+        button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
+        button_3 = types.InlineKeyboardButton(text='Визитка', callback_data='price')
+        button_4 = types.InlineKeyboardButton(text='Каталог', callback_data='price')
+        keyboard.add(button_1, button_2)
+        keyboard.add(button_3, button_4)
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
 
 
@@ -61,7 +68,13 @@ def sticker_handler(message: Message):
 def callback_inline(call):
     keyboard = types.InlineKeyboardMarkup()
     # TODO: отправить данные на сервер - почта
-    if call.data == 'business_app':
+    if call.data == 'price':
+        keyboard = types.InlineKeyboardMarkup()
+        button_1 = types.InlineKeyboardButton(text='Лендинг', callback_data='price')
+        button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
+        keyboard.add(button_1, button_2)
+        bot.send_message(call.message.chat.id, "Цена", reply_markup=keyboard)
+    elif call.data == 'business_app':
         ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
         android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
         cross_button = types.InlineKeyboardButton(text="Обе платформы", callback_data='cross')
