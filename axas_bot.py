@@ -5,15 +5,16 @@ from telebot.types import Message
 import requests
 
 
-
 TOKEN = '737334966:AAEetwAqs6cq_9ZNbeEBHpyYsDUJ1KXyA_4'
+
 STICKER_ID = 'CAADBQADzwMAAukKyAPJ6kGu2BGu0gI'
 
 bot = telebot.TeleBot(TOKEN)
 
 api = 'http://axas.ru/bot/'
 
-user_data = dict(
+
+userData = dict(
 
 )
 
@@ -30,34 +31,37 @@ def command_handler(message: Message):
 Это телеграм бот компании AXAS. Что Вас интересует?''', reply_markup=keyboard, parse_mode='HTML')
 
 
-
 @bot.message_handler(content_types=['text'])
 def contacts_handler(message: Message):
     keyboard = types.InlineKeyboardMarkup()
     if 'Мобильные приложения' in message.text:
         button_1 = types.InlineKeyboardButton(text='Приложение для бизнеса', callback_data='business_app')
         button_2 = types.InlineKeyboardButton(text='Игры', callback_data='games')
-        keyboard.add(button_1, button_2)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
         bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
-        user_data.clear()
-        user_data.update(category='Мобильные приложения')
+        userData.clear()
+        userData.update(category='Мобильные приложения')
     elif 'Нейросети' in message.text:
         keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
         keyboard.row(button_phone, 'Назад')
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
-        user_data.clear()
-        user_data.update(category='Нейросети')
+        userData.clear()
+        userData.update(category='Нейросети')
     elif 'Веб-платформы' in message.text:
         button_1 = types.InlineKeyboardButton(text='Лендинг', callback_data='price')
         button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
         button_3 = types.InlineKeyboardButton(text='Визитка', callback_data='price')
         button_4 = types.InlineKeyboardButton(text='Каталог', callback_data='price')
-        keyboard.add(button_1, button_2)
-        keyboard.add(button_3, button_4)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
+        keyboard.add(button_3)
+        keyboard.add(button_4)
+
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
-        user_data.clear()
-        user_data.update(category='Веб-платформы')
+        userData.clear()
+        userData.update(category='Веб-платформы')
     elif 'Контакты' in message.text:
 
         url = api + 'bot.php'
@@ -101,7 +105,8 @@ def callback_inline(call):
         keyboard = types.InlineKeyboardMarkup()
         button_1 = types.InlineKeyboardButton(text='Лендинг', callback_data='price')
         button_2 = types.InlineKeyboardButton(text='Интернет-магазин', callback_data='price')
-        keyboard.add(button_1, button_2)
+        keyboard.add(button_1)
+        keyboard.add(button_2)
         bot.send_message(call.message.chat.id, "Цена", reply_markup=keyboard)
     elif call.data == 'business_app':
         ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
@@ -111,18 +116,19 @@ def callback_inline(call):
         keyboard.add(android_button)
         keyboard.add(cross_button)
         bot.send_message(call.message.chat.id, 'Выбрать платформу', reply_markup=keyboard)
-        user_data.update(platform='Приложение для бизнеса')
+        userData.update(platform='Приложение для бизнеса')
     elif call.data == 'cross':
         ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
         android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
         keyboard.add(ios_button)
         keyboard.add(android_button)
         bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
-        user_data.update(platform='Приложение для бизнеса')
+        userData.update(platform='Приложение для бизнеса')
     elif call.data == 'call_axas':
 
         bot.send_message()
         url = api + 'bot.php'
+
         params = dict(
             param='phone'
         )
@@ -133,10 +139,10 @@ def callback_inline(call):
         data = resp.json()
         bot.send_message(call.message.chat.id, data['phone'])
     elif call.data == 'yes':
-        user_data.update(tech='yes')
+        userData.update(tech='yes')
     elif call.data == 'no':
-        user_data.update(tech='no')
-        print(user_data)
+        userData.update(tech='no')
+        print(userData)
 
 
 bot.polling(timeout=60)
