@@ -109,6 +109,15 @@ def callback_inline(call):
         keyboard.add(cross_button)
         bot.send_message(call.message.chat.id, 'Выбрать платформу', reply_markup=keyboard)
         userData.update(category='Приложение для бизнеса')
+    elif call.data == 'game':
+        ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
+        android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
+        cross_button = types.InlineKeyboardButton(text="Обе платформы", callback_data='cross')
+        keyboard.add(ios_button)
+        keyboard.add(android_button)
+        keyboard.add(cross_button)
+        bot.send_message(call.message.chat.id, 'Выбрать платформу', reply_markup=keyboard)
+        userData.update(category='Игра')
     elif call.data == 'ios':
         ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
         android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
