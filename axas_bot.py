@@ -25,8 +25,8 @@ userData = dict(
 def command_handler(message: Message):
     # клавиатура для бота
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.row('Мобильные приложения', 'Веб-платформы')
-    keyboard.row('Нейросети', 'Контакты')
+    keyboard.row(u'\uD83D\uDCF1' + ' Мобильные приложения', u'\uD83C\uDF10' + ' Веб-платформы')
+    keyboard.row(u'\uD83D\uDD22' + ' Нейросети', u'\uD83D\uDCDE' + ' Контакты')
 
     bot.send_message(message.chat.id, '''
 <b>Добро пожаловать!</b> 
@@ -99,20 +99,20 @@ def sticker_handler(message: Message):
 def callback_inline(call):
     keyboard = types.InlineKeyboardMarkup()
     if call.data == 'landing':
-        button_1 = types.InlineKeyboardButton(text='Узнать цену', callback_data='call_axas')
+        button_1 = types.InlineKeyboardButton(text=u'\uD83D\uDCB8' + ' Узнать цену', callback_data='call_axas')
         keyboard.add(button_1)
         bot.send_message(call.message.chat.id, "Для консультации по стоимости услуги, позвоните нам",
                          reply_markup=keyboard)
         userData.update(website_type='Лендинг')
     elif call.data == 'e-shop':
-        button_1 = types.InlineKeyboardButton(text='Узнать цену', callback_data='call_axas')
+        button_1 = types.InlineKeyboardButton(text= u'\uD83D\uDCB8' + 'Узнать цену', callback_data='call_axas')
         keyboard.add(button_1)
         bot.send_message(call.message.chat.id, "Для консультации по стоимости услуги, позвоните нам",
                          reply_markup=keyboard)
         userData.update(website_type='Интернет магазин')
         # юзер выбрал 'Приложение для бизнеса'
     elif call.data == 'business_app':
-        ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
+        ios_button = types.InlineKeyboardButton(text=" iOS-приложение", callback_data='ios')
         android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
         cross_button = types.InlineKeyboardButton(text="Обе платформы", callback_data='cross')
         keyboard.add(ios_button)
@@ -122,7 +122,7 @@ def callback_inline(call):
         userData.update(category='Приложение для бизнеса')
         # юзер выбрал 'Игра'
     elif call.data == 'games':
-        ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
+        ios_button = types.InlineKeyboardButton(text=" iOS-приложение", callback_data='ios')
         android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
         cross_button = types.InlineKeyboardButton(text="Обе платформы", callback_data='cross')
         keyboard.add(ios_button)
@@ -145,7 +145,7 @@ def callback_inline(call):
         keyboard.add(yes_button, no_button)
         bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
         userData.update(platform='Android ')
-        # усди юзер выбрад обе платформы
+        # если юзер выбрад обе платформы
     elif call.data == 'cross':
         ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
         android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
