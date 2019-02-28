@@ -28,8 +28,10 @@ def command_handler(message: Message):
     keyboard.row('Мобильные приложения', 'Веб-платформы')
     keyboard.row('Нейросети', 'Контакты')
 
-    bot.send_message(message.chat.id, '''<b>Добро пожаловать!</b> 
-Это телеграм бот компании AXAS. Что Вас интересует? Для получения подробной информации просто отправьте Ваш номер 
+    bot.send_message(message.chat.id, '''
+<b>Добро пожаловать!</b> 
+Это телеграм бот компании AXAS. Что Вас интересует? 
+Для получения подробной информации просто отправьте Ваш номер 
 телефона текстовым сообщением и мы Вам перезвоним''', reply_markup=keyboard, parse_mode='HTML')
 
 
@@ -37,7 +39,7 @@ def command_handler(message: Message):
 def contacts_handler(message: Message):
     keyboard = types.InlineKeyboardMarkup()
     if 'Мобильные приложения' in message.text:
-        button_1 = types.InlineKeyboardButton(text='Приложение для бизнеса', callback_data='business_app')
+        button_1 = types.InlineKeyboardButton(text='Приложен ие для бизнеса', callback_data='business_app')
         button_2 = types.InlineKeyboardButton(text='Игры', callback_data='games')
         keyboard.add(button_1)
         keyboard.add(button_2)
@@ -47,7 +49,7 @@ def contacts_handler(message: Message):
         # потом добавляет данные
         userData.update(soft='Мобильные приложения')
     elif 'Нейросети' in message.text:
-        button_phone = types.InlineKeyboardButton(text="Обсудить подробно",callback_data='call_axas')
+        button_phone = types.InlineKeyboardButton(text="Обсудить подробно", callback_data='call_axas')
         keyboard.row(button_phone)
         bot.send_message(message.chat.id, '''Сфера применения нейросетей огромна: искусственная сеть необходима в 
 экономике, бизнесе, в медицинской отрасли, в сфере робототехники и в системе связи нейронные сети также необходимы.
@@ -174,7 +176,7 @@ def callback_inline(call):
         # ответ нет на вопрос есть ли тех задание
     elif call.data == 'no':
         userData.update(tech='no')
-
+        # отправляет данные по юзеру
         url = api + 'bot.php'
         resp = requests.post(url=url, data=userData)
 
