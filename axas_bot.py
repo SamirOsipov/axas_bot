@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import telebot
+from telebot import apihelper
 from telebot import types
 from telebot.types import Message
 import requests
-
+# https://t.me/socks?server=207.154.222.103&port=2720&user=smltproxy&pass=smltelega0272
+apihelper.proxy = {'https': 'socks5://smltproxy:smltelega0272@207.154.222.103:2720', 'http': 'socks5://smltproxy:smltelega0272@207.154.222.103:2720'}
 
 TOKEN = '737334966:AAEetwAqs6cq_9ZNbeEBHpyYsDUJ1KXyA_4'
 
@@ -25,11 +27,10 @@ def command_handler(message: Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.row('Мобильные приложения', 'Веб-платформы')
     keyboard.row('Нейросети', 'Контакты')
-    button_phone = types.KeyboardButton(text="Отправьте номер телефона, для связи с вами", request_contact=True)
-    keyboard.row(button_phone)
 
     bot.send_message(message.chat.id, '''<b>Добро пожаловать!</b> 
-Это телеграм бот компании AXAS. Что Вас интересует?''', reply_markup=keyboard, parse_mode='HTML')
+Это телеграм бот компании AXAS. Что Вас интересует? Для получения подробной информации просто отправьте Ваш номер 
+телефона текстовым сообщением и мы Вам перезвоним''', reply_markup=keyboard, parse_mode='HTML')
 
 
 @bot.message_handler(content_types=['text'])
@@ -41,13 +42,22 @@ def contacts_handler(message: Message):
         keyboard.add(button_1)
         keyboard.add(button_2)
         bot.send_message(message.chat.id, 'Какую категорию приложения вы хотите заказать', reply_markup=keyboard)
+        # сначала удаляет старые данные
         userData.clear()
+        # потом добавляет данные
         userData.update(soft='Мобильные приложения')
     elif 'Нейросети' in message.text:
-        keyboard = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-        button_phone = types.KeyboardButton(text="Отправить номер телефона", request_contact=True)
-        keyboard.row(button_phone, 'Назад')
-        bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+        button_phone = types.InlineKeyboardButton(text="Обсудить подробно",callback_data='call_axas')
+        keyboard.row(button_phone)
+        bot.send_message(message.chat.id, '''Сфера применения нейросетей огромна: искусственная сеть необходима в 
+экономике, бизнесе, в медицинской отрасли, в сфере робототехники и в системе связи нейронные сети также необходимы.
+Используются они сегодня и в области обработки информации. Перечисленные выше сферы – далеко не полный перечень 
+областей, где созданные человеком нейросети могут быть очень полезными. Независимые эксперты уверены, что за нейронными 
+сетями будущее. 
+Поэтому заказать нейросеть сегодня желают многие компании разного профиля.
+Наша компания предлагает такую услугу, как разработка нейросетей для любой области применения. 
+Так как каждая область применения подразумевает под собой свою архитектуру нейросетей, специалисты нашей компании 
+с особым вниманием подходят к работе над каждым новым проектом''', reply_markup=keyboard)
         userData.clear()
         userData.update(soft='Нейросети')
     elif 'Веб-платформы' in message.text:
@@ -56,7 +66,9 @@ def contacts_handler(message: Message):
         keyboard.add(button_1)
         keyboard.add(button_2)
         bot.send_message(message.chat.id, "Оставьте совой номер телефона!", reply_markup=keyboard)
+        # сначала удаляет старые данные
         userData.clear()
+        # потом добавляет данные
         userData.update(soft='Веб-платформы')
     elif 'Контакты' in message.text:
         site_button = types.InlineKeyboardButton(text="Вебсайт", url="http://axas-soft.ru/")
@@ -70,14 +82,10 @@ def contacts_handler(message: Message):
         keyboard.add(inst_button)
         keyboard.add(phone_btn)
         bot.send_message(message.chat.id, "Hаши контакты.", reply_markup=keyboard)
-    elif 'Назад' in message.text:
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        keyboard.row('Мобильные приложения', 'Веб-платформы')
-        keyboard.row('Нейросети', 'Контакты')
-        button_phone = types.KeyboardButton(text="Отправьте номер телефона, для связи с вами", request_contact=True)
-        keyboard.row(button_phone)
-        bot.send_message(message.chat.id, "Назад", reply_markup=keyboard)
-
+    else:
+        print(message.chat.id)
+        bot.send_message('408003762', message.text)
+        print(message.text)
 
 @bot.message_handler(content_types=['sticker'])
 def sticker_handler(message: Message):
@@ -100,6 +108,7 @@ def callback_inline(call):
         bot.send_message(call.message.chat.id, "Для консультации по стоимости услуги, позвоните нам",
                          reply_markup=keyboard)
         userData.update(website_type='Интернет магазин')
+        # юзер выбрал 'Приложение для бизнеса'
     elif call.data == 'business_app':
         ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
         android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
@@ -109,7 +118,8 @@ def callback_inline(call):
         keyboard.add(cross_button)
         bot.send_message(call.message.chat.id, 'Выбрать платформу', reply_markup=keyboard)
         userData.update(category='Приложение для бизнеса')
-    elif call.data == 'game':
+        # юзер выбрал 'Игра'
+    elif call.data == 'games':
         ios_button = types.InlineKeyboardButton(text="iOS-приложение", callback_data='ios')
         android_button = types.InlineKeyboardButton(text="Android-приложение", callback_data='android')
         cross_button = types.InlineKeyboardButton(text="Обе платформы", callback_data='cross')
@@ -118,6 +128,7 @@ def callback_inline(call):
         keyboard.add(cross_button)
         bot.send_message(call.message.chat.id, 'Выбрать платформу', reply_markup=keyboard)
         userData.update(category='Игра')
+        # юзер выбрал только iOS
     elif call.data == 'ios':
         ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
         android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
@@ -125,19 +136,20 @@ def callback_inline(call):
         keyboard.add(android_button)
         bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
         userData.update(platform='iOS')
+        # юзер выбрал только андроид
     elif call.data == 'android':
-        ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
-        android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
-        keyboard.add(ios_button)
-        keyboard.add(android_button)
+        yes_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
+        no_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
+        keyboard.add(yes_button, no_button)
         bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
         userData.update(platform='Android ')
+        # усди юзер выбрад обе платформы
     elif call.data == 'cross':
         ios_button = types.InlineKeyboardButton(text="Да", callback_data='yes')
         android_button = types.InlineKeyboardButton(text="Нет", callback_data='no')
         keyboard.add(ios_button)
         keyboard.add(android_button)
-        bot.send_message(call.message.chat.id, 'Есть ли у Вас Тех задание, код, дизайн?', reply_markup=keyboard)
+        bot.send_message(call.message.chat.id, 'Есть ли у Вас техническое задание?', reply_markup=keyboard)
         userData.update(platform='И Android и iOS')
     elif call.data == 'call_axas':
         # Отправка номера телефона пользователю
@@ -151,9 +163,15 @@ def callback_inline(call):
 
         # парсинг json
         data = resp.json()
-        bot.send_message(call.message.chat.id, data['phone'])
+        bot.send_message(call.message.chat.id, "Позвоните нам " + data['phone'])
+        # ответ да на вопрос есть ли тех задание
     elif call.data == 'yes':
+        yes_button = types.InlineKeyboardButton(text="Да, есть", callback_data='call_axas')
+        no_button = types.InlineKeyboardButton(text="Нет", callback_data='call_axas')
+        keyboard.add(yes_button, no_button)
         userData.update(tech='yes')
+        bot.send_message(call.message.chat.id, "Есть ли у Вас дизайн желаемго продукта?", reply_markup=keyboard)
+        # ответ нет на вопрос есть ли тех задание
     elif call.data == 'no':
         userData.update(tech='no')
 
@@ -166,4 +184,6 @@ def callback_inline(call):
         bot.send_message(call.message.chat.id, "Спасибо за Ваши ответы, мы свяжемся с Вами в ближайшее время")
 
 
-bot.polling(timeout=60)
+# запускаем бота на опрос серверов телеграма
+if __name__ == '__main__':
+     bot.polling(none_stop=True)
